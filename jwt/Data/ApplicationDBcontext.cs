@@ -6,9 +6,7 @@ namespace jwt.Data
 {
     public class ApplicationDBcontext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDBcontext(DbContextOptions <ApplicationDBcontext> options) :base(options) { }
-   
-
-
+        public ApplicationDBcontext(DbContextOptions<ApplicationDBcontext> options)
+                                   : base(options) { }
     }
 }

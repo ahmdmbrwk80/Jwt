@@ -25,13 +25,13 @@ namespace jwt
             builder.Services.AddSwaggerGen();
             // to mab from app setting file to class
             builder.Services.Configure<Jwt>(builder.Configuration.GetSection("jwt"));
+
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDBcontext>();
 
             builder.Services.AddDbContext<ApplicationDBcontext>(option =>
-            option.UseSqlServer(builder.Configuration.GetConnectionString("CS"))
+            option.UseSqlServer(builder.Configuration.GetConnectionString("CS")));
 
-            );
             builder.Services.AddAuthentication(option =>
             {
                 option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -52,6 +52,8 @@ namespace jwt
                 };
 
             });
+
+
             builder.Services.AddScoped<IAuthService, AuthService>();
 
             var app = builder.Build();
