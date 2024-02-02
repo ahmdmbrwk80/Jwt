@@ -20,6 +20,30 @@ namespace jwt.Services
             _userManager = userManager;
             _jwt = jwt.Value;
         }
+
+        public async Task<AuthModel> GetTokenAsync(TokenRequestModel tokenRequestModel)
+        {
+           var authModel = new AuthModel();
+            var user = await _userManager.FindByEmailAsync(tokenRequestModel.Email);
+            if (user is null || !await _userManager.CheckPasswordAsync(user, tokenRequestModel.PassWord)) {
+                authModel.Message = "Email Or PassWord Is Mot Corect";
+                return authModel;
+
+            }
+            var jwtSecurityToken = await creatjwttoken(user);
+            var rolesList = await _userManager.GetRolesAsync(user);
+
+
+            authModel.IsAuthentecated= true;
+            authModel.token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+            authModel.Username = user.UserName;
+            authModel.Email= user.Email;
+            authModel.Expireson = jwtSecurityToken.ValidTo;
+            authModel.Roles=rolesList.ToList();
+
+            return authModel;
+        }
+
         public async Task<AuthModel> registerAsync(RegisterModel registerModel)
         {
             if (await _userManager.FindByEmailAsync(registerModel.Email) is not null)

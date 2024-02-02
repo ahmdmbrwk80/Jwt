@@ -31,7 +31,27 @@ namespace jwt.Controllers
 
             }
 
-            return Ok(result);
+           // return Ok(result);
+           return Ok(new {Token = result.token, ExpireOn = result.Expireson});
+        }
+
+
+        [HttpPost("Token")]
+        public async Task<IActionResult> GetTokenAsync([FromBody] TokenRequestModel tokenRequestModel)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _authService.GetTokenAsync(tokenRequestModel);
+
+            if (!result.IsAuthentecated)
+            {
+                return BadRequest(result.Message);
+
+            }
+
+            // return Ok(result);
+            return Ok(new { Token = result.token, ExpireOn = result.Expireson });
         }
 
     }
